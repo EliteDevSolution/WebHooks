@@ -1,7 +1,8 @@
 <?php
     include_once 'dbconfig.php';
     include_once 'process.php';
-    $res = getData($connection, "Select * From orders Order By id;") ?? [];
+    $res = getData($connection, "SELECT * FROM orders AS T1 LEFT JOIN order_details AS T2 ON(T1.id = T2.order_id) ORDER BY order_id") ?? [];
+    //echo "<script>if(prompt('Input access password!', '') != '$acesspd') location.href='/';</script>";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,36 +48,36 @@
                 <table id="basic-datatable" class="table dt-responsive nowrap w-100">
                     <thead>
                     <tr>
-                        <th>No.</th>
+                        <th>No.</th>    
+                        <th>OrderID</th>
                         <th>OrderCode</th>
                         <th>DetailModelCode</th>
-                        <th>OriginFileUrl</th>
-                        <th>ServerFileUrl</th>
-                        <th>OrderDate</th>
+                        <th>DetailQuantity</th>
+                        <th>DetailZipUrl</th>
+                        <th>DetailPreviewUrl</th>
+                        <th>ServerZipUrl</th>
+                        <th>ServerPreviewUrl</th>
+                        <th>VariantName</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php 
+                        $cnt = 0;
                         foreach($res as $row) {
                     ?>
                         <tr>
-                            <td><?=$row['id']?></td>
+                            <td><?=++$cnt?></td>
+                            <td><?=$row['order_id']?></td>
                             <td><?=$row['order_code']?></td>
-                            <td><?=$row['detail_model_code']?></td>
-                            <td>
-                                <?php foreach(unserialize($row['file_url'] ?? []) as $url) { ?>
-                                    <p><a href="<?=$url?>" target="_blank"><?=$url?></a></p>
-                                <?php } ?>
-                            </td>
-                            <td>
-                                <?php foreach(unserialize($row['server_file_url'] ?? []) as $url) { ?>
-                                    <p><a href="<?=$url?>" target="_blank"><?=$url?></a></p>
-                                <?php } ?>
-                            </td>
-                            <td><?=$row['order_date']?></td>
+                            <td><?=$row['model_code']?></td>
+                            <td><?=$row['quantity']?></td>
+                            <td><a href="<?=$row['zip_url']?>" target="_blank"><?=$row['zip_url']?></a></td>
+                            <td><a href="<?=$row['preview_url']?>" target="_blank"><?=$row['preview_url']?></a></td>
+                            <td><a href="<?=$row['server_zip_url']?>" target="_blank"><?=$row['zip_url']?></a></td>
+                            <td><a href="<?=$row['server_preview_url']?>" target="_blank"><?=$row['server_preview_url']?></a></td>
+                            <td><?=$row['variant_name']?></td>
                         </tr>
                     <?php } ?>
-
                     </tbody>
                 </table>
             </div> <!-- end card body-->
@@ -98,6 +99,7 @@
 
 <!-- App js -->
 <script src="./assets/js/app.min.js"></script>
+
 
 </body>
 </html>

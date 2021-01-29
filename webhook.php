@@ -1,101 +1,73 @@
 <?php
-    include_once 'dbconfig.php';
+	include_once 'dbconfig.php';
     include_once 'process.php';
-    $res = getData($connection, "Select * From orders Order By id;") ?? [];
+    
+    $mode = 'TEST';
+
+	$hookData = [];
+    if($mode == 'TEST')
+    {
+        $myfile = fopen("test.txt", "r") or die("Unable to open file!");
+        $testCase = json_decode(fread($myfile,filesize("test.txt")), true);
+        fclose($myfile);
+    }
+
+    if($json = !json_decode(file_get_contents("php://input"), true)) {
+		$hookData = $json;
+        if($mode == 'TEST') $hookData = $testCase;
+        //echo (json_encode($hookData['data']));exit;
+		if(array_key_exists('data', $hookData))
+		{
+			$data = $hookData['data'];
+            $orderID = $data['orderID'];
+            $orderCode = $data['orderCode'];
+            $orderDate = $data['orderDate'];
+            $insertQuery = "Insert into orders values('$orderID', '$orderDate', '$orderCode')";
+            insertData($connection, $insertQuery);
+            
+            $hostUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 
+                "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
+
+            if(array_key_exists('orderDetails', $data) && sizeof($data['orderDetails']) > 0)
+			{
+                foreach($data['orderDetails'] as $detail)
+                {
+                    $detailModelCode = $detail['detailModelCode'];
+                    $detailQuantity = $detail['detailQuantity'];
+                    $variantName = $detailModelCode;
+                    $detailZipUrl = $detail['detailZipUrl'];
+                    $detailPreviewUrl = $detail['detailPreviewUrl'];
+                    if(sizeof($detail['detailFiles']) > 0) $variantName = $detail['detailFiles'][0]['variantName'];
+                    try {
+                        //Upload your server
+                        $detailZipExtention = pathinfo($detailZipUrl, PATHINFO_EXTENSION); // to get extension
+                        $detailZipFileName = pathinfo($detailZipUrl, PATHINFO_FILENAME); //file name without extension
+                        $storeZipName = "$detailZipFileName-$variantName.$detailZipExtention";
+                        @copy($detailZipUrl, "../Download/zip/$storeZipName");
+                        $zipServerUrl = $hostUrl.'/Download/zip/'.$storeZipName;
+
+                        $detailPreviewExtention = pathinfo($detailPreviewUrl, PATHINFO_EXTENSION); // to get extension
+                        $detailPreviewFileName = pathinfo($detailPreviewUrl, PATHINFO_FILENAME); //file name without extension
+                        $storePreviewName = "$detailPreviewFileName-$variantName.$detailPreviewExtention";
+                        @copy($detailPreviewUrl, "../Download/png/$storePreviewName");
+                        $previewServerUrl = $hostUrl.'/Download/png/'.$storePreviewName;
+                        
+                        //Db order_details table insert....
+                        $insertQuery = "Insert into order_details values(NULL, '$orderID', '$detailQuantity', '$detailModelCode', '$detailZipUrl', '$detailPreviewUrl', '$zipServerUrl', '$previewServerUrl', '$variantName')";
+                        insertData($connection, $insertQuery);
+
+                    }catch (Exception $e){
+                        echo json_encode('{message:"error", code:402}'); 	
+                    }
+                }
+            } else 
+            {
+                echo json_encode('{message:"error", code:402}');
+                exit;
+            }
+			echo json_encode('{message:"success", code:200}'); 
+		}
+	}  else {
+		echo json_encode('{message:"error", code:400}'); 
+	}
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<!-- Mirrored from coderthemes.com/ubold/layouts/default/tables-datatables.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 10 Sep 2020 17:27:44 GMT -->
-<head>
-    <meta charset="utf-8" />
-    <title>Zakeke Web Hook Data Processor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Zakeke Web Hook Data Processor" name="description" />
-    <meta content="Coderthemes" name="author" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- App favicon -->
-    <link rel="shortcut icon" href="https://coderthemes.com/ubold/layouts/assets/images/favicon.ico">
-
-    <!-- third party css -->
-    <link href="./assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-    <link href="./assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-    <!-- third party css end -->
-
-    <!-- App css -->
-    <link href="./assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="bs-default-stylesheet" />
-    <link href="./assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-default-stylesheet" />
-    <!-- icons -->
-    <link href="./assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-    <style>
-        p {
-          margin-bottom: 0px;  
-        }
-        a:hover {
-            color: red;
-        }
-    </style>
-</head>
-
-<body>
-<div class="row mt-3">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-3">Web Hook Data Processor</h4>
-                <table id="basic-datatable" class="table dt-responsive nowrap w-100">
-                    <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>OrderCode</th>
-                        <th>DetailModelCode</th>
-                        <th>OriginFileUrl</th>
-                        <th>ServerFileUrl</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php 
-                        foreach($res as $row) {
-                    ?>
-                        <tr>
-                            <td><?=$row['id']?></td>
-                            <td><?=$row['order_code']?></td>
-                            <td><?=$row['detail_model_code']?></td>
-                            <td>
-                                <?php foreach(unserialize($row['file_url'] ?? []) as $url) { ?>
-                                    <p><a href="<?=$url?>" target="_blank"><?=$url?></a></p>
-                                <?php } ?>
-                            </td>
-                            <td>
-                                <?php foreach(unserialize($row['server_file_url'] ?? []) as $url) { ?>
-                                    <p><a href="<?=$url?>" target="_blank"><?=$url?></a></p>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-
-                    </tbody>
-                </table>
-            </div> <!-- end card body-->
-        </div> <!-- end card -->
-    </div>
-    <div class="col-md-1"></div>
-</div>
-<script src="./assets/js/vendor.min.js"></script>
-
-<!-- third party js -->
-<script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="./assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="./assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="./assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-<!-- third party js ends -->
-
-<!-- Datatables init -->
-<script src="./assets/js/pages/datatables.init.js"></script>
-
-<!-- App js -->
-<script src="./assets/js/app.min.js"></script>
-
-</body>
-</html>

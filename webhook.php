@@ -2,7 +2,7 @@
 	include_once 'dbconfig.php';
     include_once 'process.php';
     
-    $mode = 'TEST';
+    $mode = 'LIVE';
 
 	$hookData = [];
     if($mode == 'TEST')
@@ -43,13 +43,13 @@
                         $detailZipExtention = pathinfo($detailZipUrl, PATHINFO_EXTENSION); // to get extension
                         $detailZipFileName = pathinfo($detailZipUrl, PATHINFO_FILENAME); //file name without extension
                         $storeZipName = "$detailZipFileName---$variantName.$detailZipExtention";
-                        //@copy($detailZipUrl, "../Download/zip/$storeZipName");
+                        @copy($detailZipUrl, "../Download/zip/$storeZipName");
                         $zipServerUrl = $hostUrl.'/Download/zip/'.$storeZipName;
 
                         $detailPreviewExtention = pathinfo($detailPreviewUrl, PATHINFO_EXTENSION); // to get extension
                         $detailPreviewFileName = pathinfo($detailPreviewUrl, PATHINFO_FILENAME); //file name without extension
                         $storePreviewName = "$detailPreviewFileName---$variantName.$detailPreviewExtention";
-                        //@copy($detailPreviewUrl, "../Download/png/$storePreviewName");
+                        @copy($detailPreviewUrl, "../Download/png/$storePreviewName");
                         $previewServerUrl = $hostUrl.'/Download/png/'.$storePreviewName;
                         
                         //Db order_details table insert....

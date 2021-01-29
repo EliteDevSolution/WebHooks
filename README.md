@@ -1,8 +1,8 @@
 # WebHooks
 
 https://zakeke.zendesk.com/hc/en-us/articles/360025019933-WebHooks
-
-We will buy a server with LAMP on it for the webhooks integration, a subdomain will be linked to this server.
+<br>
+https://order.mydesignlist.com/WebHooks/
 
 Workflows:
 1. Get the following info via webhooks and then store them into the MySQL database on the server:

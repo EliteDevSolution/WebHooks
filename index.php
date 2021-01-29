@@ -2,7 +2,7 @@
     include_once 'dbconfig.php';
     include_once 'process.php';
     $res = getData($connection, "SELECT * FROM orders AS T1 LEFT JOIN order_details AS T2 ON(T1.id = T2.order_id) ORDER BY order_id") ?? [];
-    //echo "<script>if(prompt('Input access password!', '') != '$acesspd') location.href='/';</script>";
+    echo "<script>if(prompt('Input access password!', '') != '$acesspd') location.href='/';</script>";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,7 +73,7 @@
                             <td><?=$row['quantity']?></td>
                             <td><a href="<?=$row['zip_url']?>" target="_blank"><?=$row['zip_url']?></a></td>
                             <td><a href="<?=$row['preview_url']?>" target="_blank"><?=$row['preview_url']?></a></td>
-                            <td><a href="<?=$row['server_zip_url']?>" target="_blank"><?=$row['zip_url']?></a></td>
+                            <td><a href="<?=$row['server_zip_url']?>" target="_blank"><?=$row['server_zip_url']?></a></td>
                             <td><a href="<?=$row['server_preview_url']?>" target="_blank"><?=$row['server_preview_url']?></a></td>
                             <td><?=$row['variant_name']?></td>
                         </tr>

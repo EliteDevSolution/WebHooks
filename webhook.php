@@ -56,7 +56,7 @@
                         $insertQuery = "Insert into order_details values(NULL, '$orderID', '$detailQuantity', '$detailModelCode', '$detailZipUrl', '$detailPreviewUrl', '$zipServerUrl', '$previewServerUrl', '$variantName')";
                         insertData($connection, $insertQuery);
 
-                    }catch (Exception $e){
+                    } catch (Exception $e){
                         echo json_encode('{message:"error", code:402}'); 	
                     }
                 }

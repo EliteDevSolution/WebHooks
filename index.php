@@ -64,12 +64,12 @@
                             <td><?=$row['detail_model_code']?></td>
                             <td>
                                 <?php foreach(unserialize($row['file_url'] ?? []) as $url) { ?>
-                                    <p><a href="<?=$url?>"><?=$url?></a></p>
+                                    <p><a href="<?=$url?>" target="_blank"><?=$url?></a></p>
                                 <?php } ?>
                             </td>
                             <td>
                                 <?php foreach(unserialize($row['server_file_url'] ?? []) as $url) { ?>
-                                    <p><a href="<?=$url?>"><?=$url?></a></p>
+                                    <p><a href="<?=$url?>" target="_blank"><?=$url?></a></p>
                                 <?php } ?>
                             </td>
                         </tr>

@@ -12,7 +12,7 @@
         fclose($myfile);
     }
 
-    if($json = !json_decode(file_get_contents("php://input"), true)) {
+    if($json = json_decode(file_get_contents("php://input"), true)) {
 		$hookData = $json;
         if($mode == 'TEST') $hookData = $testCase;
         //echo (json_encode($hookData['data']));exit;

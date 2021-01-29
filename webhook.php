@@ -42,14 +42,14 @@
                         //Upload your server
                         $detailZipExtention = pathinfo($detailZipUrl, PATHINFO_EXTENSION); // to get extension
                         $detailZipFileName = pathinfo($detailZipUrl, PATHINFO_FILENAME); //file name without extension
-                        $storeZipName = "$detailZipFileName-$variantName.$detailZipExtention";
-                        @copy($detailZipUrl, "../Download/zip/$storeZipName");
+                        $storeZipName = "$detailZipFileName---$variantName.$detailZipExtention";
+                        //@copy($detailZipUrl, "../Download/zip/$storeZipName");
                         $zipServerUrl = $hostUrl.'/Download/zip/'.$storeZipName;
 
                         $detailPreviewExtention = pathinfo($detailPreviewUrl, PATHINFO_EXTENSION); // to get extension
                         $detailPreviewFileName = pathinfo($detailPreviewUrl, PATHINFO_FILENAME); //file name without extension
-                        $storePreviewName = "$detailPreviewFileName-$variantName.$detailPreviewExtention";
-                        @copy($detailPreviewUrl, "../Download/png/$storePreviewName");
+                        $storePreviewName = "$detailPreviewFileName---$variantName.$detailPreviewExtention";
+                        //@copy($detailPreviewUrl, "../Download/png/$storePreviewName");
                         $previewServerUrl = $hostUrl.'/Download/png/'.$storePreviewName;
                         
                         //Db order_details table insert....

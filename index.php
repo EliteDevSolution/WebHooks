@@ -52,6 +52,7 @@
                         <th>DetailModelCode</th>
                         <th>OriginFileUrl</th>
                         <th>ServerFileUrl</th>
+                        <th>OrderDate</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -72,6 +73,7 @@
                                     <p><a href="<?=$url?>" target="_blank"><?=$url?></a></p>
                                 <?php } ?>
                             </td>
+                            <td><?=$row['order_date']?></td>
                         </tr>
                     <?php } ?>
 

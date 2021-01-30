@@ -36,7 +36,7 @@
             color: red;
         }
         table.dataTable.dtr-inline.collapsed>tbody>tr[role=row]>td:first-child:before, table.dataTable.dtr-inline.collapsed>tbody>tr[role=row]>th:first-child:before {
-            top: 2.6rem !important;
+            top: 5.13rem !important;
         }
         td {
             vertical-align: middle !important;
@@ -72,7 +72,7 @@
                         foreach($res as $row) {
                     ?>
                         <tr>
-                            <td width="10%"><?=++$cnt?><img style="margin-left:10px;" src="<?=$row['preview_url']?>"  width="80"/></td>
+                            <td width="10%"><?=++$cnt?><img style="margin-left:10px;" src="<?=$row['preview_url']?>"  width="160"/></td>
                             <td><?=$row['order_code']?></td>
                             <td><?=$row['model_code']?></td>
                             <td><?=$row['variant_name']?></td>

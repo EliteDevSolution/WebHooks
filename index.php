@@ -10,13 +10,13 @@
 <!-- Mirrored from coderthemes.com/ubold/layouts/default/tables-datatables.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 10 Sep 2020 17:27:44 GMT -->
 <head>
     <meta charset="utf-8" />
-    <title>Zakeke Web Hook Data Processor</title>
+    <title>Printing Files – My Design List</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Zakeke Web Hook Data Processor" name="description" />
+    <meta content="Printing Files – My Design List" name="description" />
     <meta content="Coderthemes" name="author" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="https://coderthemes.com/ubold/layouts/assets/images/favicon.ico">
+    <link rel="shortcut icon" href="https://img.mydesignlist.com/pub/media/favicon/default/MOCKUP_02Sep17_1702_B35604_1.ico">
 
     <!-- third party css -->
     <link href="./assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -35,6 +35,12 @@
         a:hover {
             color: red;
         }
+        table.dataTable.dtr-inline.collapsed>tbody>tr[role=row]>td:first-child:before, table.dataTable.dtr-inline.collapsed>tbody>tr[role=row]>th:first-child:before {
+            top: 2.6rem !important;
+        }
+        td {
+            vertical-align: middle !important;
+        }
     </style>
 </head>
 
@@ -44,20 +50,20 @@
     <div class="col-md-10">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title mb-3">Web Hook Data Processor</h4>
+                <h3 class="mb-3">Printing Files – My Design List</h3>
                 <table id="basic-datatable" class="table dt-responsive nowrap w-100">
                     <thead>
                     <tr>
                         <th>No.</th>    
-                        <th>OrderID</th>
-                        <th>OrderCode</th>
-                        <th>DetailModelCode</th>
-                        <th>DetailQuantity</th>
+                        <th>Order Number</th>
+                        <th>SKU</th>
+                        <th>Variant</th>
+                        <th>Quantity</th>
                         <th>DetailZipUrl</th>
                         <th>DetailPreviewUrl</th>
                         <th>ServerZipUrl</th>
                         <th>ServerPreviewUrl</th>
-                        <th>VariantName</th>
+                        
                     </tr>
                     </thead>
                     <tbody>
@@ -66,16 +72,16 @@
                         foreach($res as $row) {
                     ?>
                         <tr>
-                            <td><?=++$cnt?></td>
-                            <td><?=$row['order_id']?></td>
+                            <td width="10%"><?=++$cnt?><img style="margin-left:10px;" src="<?=$row['preview_url']?>"  width="80"/></td>
                             <td><?=$row['order_code']?></td>
                             <td><?=$row['model_code']?></td>
+                            <td><?=$row['variant_name']?></td>
                             <td><?=$row['quantity']?></td>
                             <td><a href="<?=$row['zip_url']?>" target="_blank"><?=$row['zip_url']?></a></td>
                             <td><a href="<?=$row['preview_url']?>" target="_blank"><?=$row['preview_url']?></a></td>
                             <td><a href="<?=$row['server_zip_url']?>" target="_blank"><?=$row['server_zip_url']?></a></td>
                             <td><a href="<?=$row['server_preview_url']?>" target="_blank"><?=$row['server_preview_url']?></a></td>
-                            <td><?=$row['variant_name']?></td>
+
                         </tr>
                     <?php } ?>
                     </tbody>

@@ -48,7 +48,7 @@
 
                         $detailPreviewExtention = pathinfo($detailPreviewUrl, PATHINFO_EXTENSION); // to get extension
                         $detailPreviewFileName = pathinfo($detailPreviewUrl, PATHINFO_FILENAME); //file name without extension
-                        $storePreviewName = "$detailPreviewFileName---$variantName.$detailPreviewExtention";
+                        $storePreviewName = "$detailZipFileName---$variantName.$detailPreviewExtention";
                         @copy($detailPreviewUrl, "../Download/png/$storePreviewName");
                         $previewServerUrl = $hostUrl.'/Download/png/'.$storePreviewName;
                         

@@ -53,7 +53,7 @@
                 <div class="ml-0 row" style="margin-top:30vh;">    
                     <h4 class="col-md-5 text-right">You have to input Access password?</h4>
                     <input class="form-control col-3" type="password" id="password" name="password" autofocus require/>
-                    <input class="btn btn-danger col-1" type="button" value="Login" id="btn_submit"  />
+                    <input class="btn btn-danger col-1" type="submit" value="Login" id="btn_submit"  />
                     <div class="col-md-3"></div>
                 </div>
             </form>
@@ -76,7 +76,6 @@
                         <th>DetailPreviewUrl</th>
                         <th>ServerZipUrl</th>
                         <th>ServerPreviewUrl</th>
-                        
                     </tr>
                     </thead>
                     <tbody>

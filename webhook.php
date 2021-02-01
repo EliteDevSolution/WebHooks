@@ -2,19 +2,26 @@
 	include_once 'dbconfig.php';
     include_once 'process.php';
     
-    $mode = 'LIVE';
+    $mode = 'TEST';
 
 	$hookData = [];
     if($mode == 'TEST')
     {
         $myfile = fopen("test.txt", "r") or die("Unable to open file!");
-        $testCase = json_decode(fread($myfile,filesize("test.txt")), true);
+        $testCase = json_decode(fread($myfile, filesize("test.txt")), true);
         fclose($myfile);
     }
 
     if($json = json_decode(file_get_contents("php://input"), true) || $mode == 'TEST') {
 		$hookData = $json;
         if($mode == 'TEST') $hookData = $testCase;
+        
+        ////HookFile Write
+        $myfile = fopen("hookdata.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, json_encode($hookData['data']));
+        fclose($myfile);
+        ////--End File Write---////
+
         //echo (json_encode($hookData['data']));exit;
 		if(array_key_exists('data', $hookData))
 		{
@@ -43,13 +50,13 @@
                         $detailZipExtention = pathinfo($detailZipUrl, PATHINFO_EXTENSION); // to get extension
                         $detailZipFileName = pathinfo($detailZipUrl, PATHINFO_FILENAME); //file name without extension
                         $storeZipName = "$detailZipFileName---$variantName.$detailZipExtention";
-                        @copy($detailZipUrl, "../Download/zip/$storeZipName");
+                        //@copy($detailZipUrl, "../Download/zip/$storeZipName");
                         $zipServerUrl = $hostUrl.'/Download/zip/'.$storeZipName;
 
                         $detailPreviewExtention = pathinfo($detailPreviewUrl, PATHINFO_EXTENSION); // to get extension
                         $detailPreviewFileName = pathinfo($detailPreviewUrl, PATHINFO_FILENAME); //file name without extension
                         $storePreviewName = "$detailZipFileName---$variantName.$detailPreviewExtention";
-                        @copy($detailPreviewUrl, "../Download/png/$storePreviewName");
+                        //@copy($detailPreviewUrl, "../Download/png/$storePreviewName");
                         $previewServerUrl = $hostUrl.'/Download/png/'.$storePreviewName;
                         
                         //Db order_details table insert....

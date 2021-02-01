@@ -28,6 +28,10 @@
     <!-- icons -->
     <link href="./assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <style>
+        #datatable
+        {
+            display: none;
+        }
         p {
           margin-bottom: 0px;  
         }
@@ -64,7 +68,7 @@
         <div class="card">
             <div class="card-body">
                 <h3 class="mb-3">Printing Files – My Design List</h3>
-                <table id="basic-datatable" class="table dt-responsive nowrap w-100">
+                <table id="datatable" class="table dt-responsive nowrap w-100">
                     <thead>
                     <tr>
                         <th>No.</th>    
@@ -84,7 +88,7 @@
                         foreach($res as $row) {
                     ?>
                         <tr>
-                            <td width="10%"><?=++$cnt?><img style="margin-left:10px;" src="<?=$row['preview_url']?>"  width="160"/></td>
+                            <td width="10%"><?=++$cnt?><img class="thumb-img" style="margin-left:10px;" src="<?=$row['preview_url']?>"  width="160"/></td>
                             <td><?=$row['order_code']?></td>
                             <td><?=$row['model_code']?></td>
                             <td><?=$row['variant_name']?></td>
@@ -111,10 +115,8 @@
 <script src="./assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="./assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="./assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+<script src="./assets/libs/lazyload/lazyload.js"></script>
 <!-- third party js ends -->
-
-<!-- Datatables init -->
-<script src="./assets/js/pages/datatables.init.js"></script>
 
 <!-- App js -->
 <script src="./assets/js/app.min.js"></script>
@@ -130,6 +132,22 @@
             {
                 $('form').unbind('submit').submit();
             }
+        });
+
+        $("#datatable").DataTable({
+            language:{
+                paginate:{ 
+                    previous:"<i class='mdi mdi-chevron-left'>",
+                    next:"<i class='mdi mdi-chevron-right'>"}
+                },
+                order: [[ 1, "desc" ]],
+                drawCallback:function(){
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                    $("img.thumb-img").lazyload();
+                },
+                initComplete: function(settings, json) {
+                    $('#datatable').show();
+                }
         });
 
     });

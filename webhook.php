@@ -2,7 +2,7 @@
 	include_once 'dbconfig.php';
     include_once 'process.php';
     
-    $mode = 'TEST';
+    $mode = 'LIVE';
 
 	$hookData = [];
     if($mode == 'TEST')
@@ -12,14 +12,14 @@
         fclose($myfile);
     }
 
-    if($json = json_decode(file_get_contents("php://input"), true) || $mode == 'TEST') {
+    if($json = json_decode(file_get_contents("php://input"), true)) {
 		$hookData = $json;
         if($mode == 'TEST') $hookData = $testCase;
         
         ////HookFile Write
-        $myfile = fopen("hookdata.txt", "w") or die("Unable to open file!");
-        fwrite($myfile, json_encode($hookData['data']));
-        fclose($myfile);
+        //$myfile = fopen("hookdata.txt", "w") or die("Unable to open file!");
+        //fwrite($myfile, json_encode($hookData['data']));
+        //fclose($myfile);
         ////--End File Write---////
 
         //echo (json_encode($hookData['data']));exit;
@@ -50,19 +50,24 @@
                         $detailZipExtention = pathinfo($detailZipUrl, PATHINFO_EXTENSION); // to get extension
                         $detailZipFileName = pathinfo($detailZipUrl, PATHINFO_FILENAME); //file name without extension
                         $storeZipName = "$detailZipFileName---$variantName.$detailZipExtention";
-                        //@copy($detailZipUrl, "../Download/zip/$storeZipName");
                         $zipServerUrl = $hostUrl.'/Download/zip/'.$storeZipName;
 
                         $detailPreviewExtention = pathinfo($detailPreviewUrl, PATHINFO_EXTENSION); // to get extension
                         $detailPreviewFileName = pathinfo($detailPreviewUrl, PATHINFO_FILENAME); //file name without extension
                         $storePreviewName = "$detailZipFileName---$variantName.$detailPreviewExtention";
-                        //@copy($detailPreviewUrl, "../Download/png/$storePreviewName");
                         $previewServerUrl = $hostUrl.'/Download/png/'.$storePreviewName;
+                        $created_at = date('Y-m-d H:i');
                         
                         //Db order_details table insert....
                         $insertQuery = "Insert into order_details values(NULL, '$orderID', '$detailQuantity', '$detailModelCode', '$detailZipUrl', '$detailPreviewUrl', '$zipServerUrl', '$previewServerUrl', '$variantName')";
                         insertData($connection, $insertQuery);
-
+                        
+                        $cronRowRes = getData($connection, "Select id From cron_jobs Where detail_zip_url='$detailZipUrl' AND detail_preview_url='$detailPreviewUrl'");
+                        if(sizeof($cronRowRes) == 0)
+                        {
+                            $insertQuery = "Insert into cron_jobs values(NULL, '$detailZipUrl', '$detailPreviewUrl', '$zipServerUrl', '$previewServerUrl', '$storeZipName', '$storePreviewName', '0', '$created_at')";
+                            insertData($connection, $insertQuery);
+                        }
                     } catch (Exception $e){
                         echo json_encode('{message:"error", code:402}'); 	
                     }

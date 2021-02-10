@@ -32,6 +32,7 @@
         {
             display: none;
         }
+
         p {
           margin-bottom: 0px;  
         }
@@ -88,7 +89,7 @@
                         foreach($res as $row) {
                     ?>
                         <tr>
-                            <td width="10%"><?=++$cnt?><img class="thumb-img" style="margin-left:10px;" data-original="<?=$row['preview_url']?>"  alt="1" width="160"/></td>
+                            <td width="10%"><?=++$cnt?><img class="thumb-img" style="margin-left:10px;" data-src="<?=$row['preview_url']?>"  alt="1" width="160"/></td>
                             <td><?=$row['order_code']?></td>
                             <td><?=$row['model_code']?></td>
                             <td><?=$row['variant_name']?></td>
